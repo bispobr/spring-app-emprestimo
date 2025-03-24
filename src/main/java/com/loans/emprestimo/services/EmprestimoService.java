@@ -28,7 +28,7 @@ public class EmprestimoService {
             emprestimo.add(new EmprestimoRespostaDTO("CONSIGMENT",2));
         }
 
-        if(income > 3000 && income <= 5000 && age < 30 && "SP".equalsIgnoreCase(location)){
+        if(income >= 3000 && income <= 5000 && age < 30 && "SP".equalsIgnoreCase(location)){
             emprestimo.add(new EmprestimoRespostaDTO("PERSONAL",4));
             emprestimo.add(new EmprestimoRespostaDTO("GUARANTEED",3));
         }
