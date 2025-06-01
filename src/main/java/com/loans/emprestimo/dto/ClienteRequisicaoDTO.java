@@ -1,19 +1,9 @@
 package com.loans.emprestimo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ClienteRequisicaoDTO {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-    private int age;
-    private double income ;
-    private String localation ;
-    private String name ;
-    private String  cpf;
+public record ClienteRequisicaoDTO(@NotNull int age, @NotNull double income, @NotBlank String location,@NotBlank String name,@NotBlank String  cpf) {
+
 }

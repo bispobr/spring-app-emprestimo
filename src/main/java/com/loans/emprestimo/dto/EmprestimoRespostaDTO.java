@@ -1,16 +1,12 @@
 package com.loans.emprestimo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 
-public class EmprestimoRespostaDTO {
-    private String type;
-    private int interesRate;
+public record EmprestimoRespostaDTO(@NotBlank String type,@NotNull int interesRate) {
+    public EmprestimoRespostaDTO(@NotBlank String type, @NotNull int interesRate) {
+        this.type = type;
+        this.interesRate = interesRate;
+    }
 }
