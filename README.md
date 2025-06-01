@@ -1,32 +1,48 @@
-# spring-app-emprestimo
+# API REST - Análise de Modalidades de Empréstimo
 
-Este repositório contém um projeto simples desenvolvido com Java Spring, com o objetivo de praticar e aplicar conceitos dessa tecnologia. A aplicação determina as modalidades de empréstimo disponíveis para um cliente, retornando seu nome e uma lista de empréstimos acessíveis, incluindo os tipos e as taxas de juros correspondentes. Seguindo os detalhes abaixo
+## Descrição
+
+Esta API REST tem como objetivo determinar as modalidades de empréstimo disponíveis para um cliente com base em critérios pré-definidos. A resposta da API inclui o nome do cliente e uma lista de empréstimos acessíveis, contendo os respectivos tipos e taxas de juros.
+
+
+## Funcionalidades
+
+- Avaliação de elegibilidade para três tipos de empréstimo:
+  - **Empréstimo Pessoal**: 4% de juros
+  - **Empréstimo Consignado**: 2% de juros
+  - **Empréstimo com Garantia**: 3% de juros
+- A lógica de concessão considera as seguintes variáveis:
+  - Idade
+  - Localização
+  - Salário
+
+### Regras de elegibilidade
+
+- **Empréstimo Pessoal**
+  - Disponível se o salário for **≤ R$ 3.000**
+  - Disponível se o salário estiver entre **R$ 3.000 e R$ 5.000**, **o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
+
+- **Empréstimo Consignado**
+  - Disponível se o salário for **≥ R$ 5.000**
+
+- **Empréstimo com Garantia**
+  - Disponível se o salário for **≤ R$ 3.000**
+  - Disponível se o salário estiver entre **R$ 3.000 e R$ 5.000**, **o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
+
+## Tecnologias Utilizadas
+
+- **Java + Spring Boot**: Framework principal da aplicação
+- **Lombok (@Slf4j)**: Geração de logs com facilidade e redução de boilerplate
+- **Swagger**: Geração de documentação interativa da API
+- **Spring Boot Actuator**: Aplicação de observabilidade e monitoramento, incluindo endpoints de health check
+- **Integração Swagger + Actuator**: Permite visibilidade operacional integrada com a documentação da API
 
 ## Requisitos
 
-As modalidades de empréstimo que serão analisadas são:
+- Java 21+
+- Maven
 
-- **Empréstimo pessoal**: Taxa de juros de 4%.
-- **Empréstimo consignado**: Taxa de juros de 2%.
-- **Empréstimo com garantia**: Taxa de juros de 3%.
-
-As modalidades de empréstimo disponíveis para uma pessoa são baseadas em algumas variáveis específicas, são elas:
-
-- **Idade**
-- **Salário**
-- **Localização**
-
-Os emprestimos Possuem as seguintes condições:
-
-- Conceder o empréstimo pessoal se o salário do cliente for igual ou inferior a R$ 3000.
-- Conceder o empréstimo pessoal se o salário do cliente estiver entre R$ 3000 e R$ 5000, se o cliente tiver menos de 30
-  anos e residir em São Paulo (SP).
-- Conceder o empréstimo consignado se o salário do cliente for igual ou superior a R$ 5000.
-- Conceder o empréstimo com garantia se o salário do cliente for igual ou inferior a R$ 3000.
-- Conceder o empréstimo com garantia se o salário do cliente estiver entre R$ 3000 e R$ 5000, se o cliente tiver
-  menos de 30 anos e residir em São Paulo (SP).
-
-## Instalação
+## Executando o Projeto
 
 1. Clone o repositório:
 
@@ -34,13 +50,12 @@ Os emprestimos Possuem as seguintes condições:
 git https://github.com/bispobr/spring-app-emprestimo.git
 ```
 
-2. Instale as dependências com Maven
-
 ## Como usar
 
 1. Inicie a aplicação
 2. A API está acessivel atraves do endereço http://localhost:8080
-
+3. A documentação da API está acessível através do Link http://localhost:8080/swagger-ui/index.html#/
+4. O endpoint de saúde e métricas do Actuator está acessível através do Link http://localhost:8080/actuator/health
 ## API Endpoints
 
 A API contem o seguinte endpoint :
@@ -52,8 +67,15 @@ Content-Type: application/json
 {
   "age": 00,
   "income": 0000.00,
-  "localation": "xx",
+  "location": "xx",
   "name": "xxxxxx",
   "cpf": "000.000.000-00"
 }
 ```
+| Parâmetro | Tipo      | Descrição                           |
+|:----------|:----------| :---------------------------------- |
+| `age`     | `Integer` | **Obrigatório**.  A idade do usuário 
+| `income`   | `Double`  | **Obrigatório**. O salario do usuário 
+| `location`    | `String`  | **Obrigatório**. A residência do usuário 
+| `name`   | `String`  | **Obrigatório**. O nome do usuário 
+| `cpf`    | `String`  | **Obrigatório**. O crf do usuário 
