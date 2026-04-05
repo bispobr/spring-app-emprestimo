@@ -20,14 +20,14 @@ Esta API REST tem como objetivo determinar as modalidades de empréstimo dispon�
 
 - **Empréstimo Pessoal**
   - Disponível se o salário for **≤ R$ 3.000**
-  - Disponível se o salário estiver entre **R$ 3.000 e R$ 5.000**, **o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
+  - Disponível se o salário estiver entre 3.000 e 5.000,e o cliente tiver menos de 30 anos e **residir em São Paulo (SP)**
 
 - **Empréstimo Consignado**
   - Disponível se o salário for **≥ R$ 5.000**
 
 - **Empréstimo com Garantia**
   - Disponível se o salário for **≤ R$ 3.000**
-  - Disponível se o salário estiver entre **R$ 3.000 e R$ 5.000**, **o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
+  - Disponível se o salário estiver entre 3.000 e  5.000, **e o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
 
 ## Tecnologias Utilizadas
 
@@ -36,7 +36,9 @@ Esta API REST tem como objetivo determinar as modalidades de empréstimo dispon�
 - **Swagger**: Geração de documentação interativa da API
 - **Spring Boot Actuator**: Aplicação de observabilidade e monitoramento, incluindo endpoints de health check
 - **Integração Swagger + Actuator**: Permite visibilidade operacional integrada com a documentação da API
-
+- **Tratamento de Exceções** - @RestControllerAdvice
+- **Docker** – criação, implantação e gerenciamento de aplicações dentro de contêineres.
+- **JUnit 5 + Mockito** – Testes Unitarios
 ## Requisitos
 
 - Java 21+
@@ -56,6 +58,29 @@ git https://github.com/bispobr/spring-app-emprestimo.git
 2. A API está acessivel atraves do endereço http://localhost:8080
 3. A documentação da API está acessível através do Link http://localhost:8080/swagger-ui/index.html#/
 4. O endpoint de saúde e métricas do Actuator está acessível através do Link http://localhost:8080/actuator/health
+
+## Como Rodar em um Container (Opcional)
+
+1. Construa o projeto
+
+```bash
+mvn clean package 
+```
+
+2. Gere a Imagem Docker, com o Docker  instalado execute:
+
+
+```bash
+docker build -t emprestimo . 
+```
+
+3. Execute o Container
+
+```bash
+docker run -p 8080:8080 emprestimo
+```
+
+
 ## API Endpoints
 
 A API contem o seguinte endpoint :
@@ -78,4 +103,4 @@ Content-Type: application/json
 | `income`   | `Double`  | **Obrigatório**. O salario do usuário 
 | `location`    | `String`  | **Obrigatório**. A residência do usuário 
 | `name`   | `String`  | **Obrigatório**. O nome do usuário 
-| `cpf`    | `String`  | **Obrigatório**. O crf do usuário 
+| `cpf`    | `String`  | **Obrigatório**. O cpf do usuário 
