@@ -1,106 +1,185 @@
-# API REST - Análise de Modalidades de Empréstimo
+# API REST — Análise de Modalidades de Empréstimo
 
-## Descrição
+API REST desenvolvida com Java e Spring Boot para analisar as modalidades de empréstimo disponíveis para um cliente de acordo com sua idade, renda e localização.
 
-Esta API REST tem como objetivo determinar as modalidades de empréstimo disponíveis para um cliente com base em critérios pré-definidos. A resposta da API inclui o nome do cliente e uma lista de empréstimos acessíveis, contendo os respectivos tipos e taxas de juros.
-
+A aplicação aplica regras de negócio para determinar quais modalidades podem ser oferecidas e retorna as respectivas taxas de juros.
 
 ## Funcionalidades
 
-- Avaliação de elegibilidade para três tipos de empréstimo:
-  - **Empréstimo Pessoal**: 4% de juros
-  - **Empréstimo Consignado**: 2% de juros
-  - **Empréstimo com Garantia**: 3% de juros
-- A lógica de concessão considera as seguintes variáveis:
-  - Idade
-  - Localização
-  - Salário
+- Análise de elegibilidade para diferentes modalidades de empréstimo
+- Empréstimo pessoal
+- Empréstimo consignado
+- Empréstimo com garantia
+- Validação dos dados recebidos
+- Tratamento global de exceções
+- Documentação da API com Swagger/OpenAPI
+- Monitoramento com Spring Boot Actuator
+- Testes automatizados
+- Execução em container Docker
 
-### Regras de elegibilidade
+## Regras de elegibilidade
 
-- **Empréstimo Pessoal**
-  - Disponível se o salário for **≤ R$ 3.000**
-  - Disponível se o salário estiver entre 3.000 e 5.000,e o cliente tiver menos de 30 anos e **residir em São Paulo (SP)**
+### Empréstimo pessoal
 
-- **Empréstimo Consignado**
-  - Disponível se o salário for **≥ R$ 5.000**
+- Renda igual ou inferior a **R$ 3.000**; ou
+- Renda entre **R$ 3.000 e R$ 5.000**, desde que o cliente tenha menos de 30 anos e resida em São Paulo (SP).
 
-- **Empréstimo com Garantia**
-  - Disponível se o salário for **≤ R$ 3.000**
-  - Disponível se o salário estiver entre 3.000 e  5.000, **e o cliente tiver menos de 30 anos** e **residir em São Paulo (SP)**
+**Taxa de juros:** 4%.
 
-## Tecnologias Utilizadas
+### Empréstimo consignado
 
-- **Java + Spring Boot**: Framework principal da aplicação
-- **Lombok (@Slf4j)**: Geração de logs com facilidade e redução de boilerplate
-- **Swagger**: Geração de documentação interativa da API
-- **Spring Boot Actuator**: Aplicação de observabilidade e monitoramento, incluindo endpoints de health check
-- **Integração Swagger + Actuator**: Permite visibilidade operacional integrada com a documentação da API
-- **Tratamento de Exceções** - @RestControllerAdvice
-- **Docker** – criação, implantação e gerenciamento de aplicações dentro de contêineres.
-- **JUnit 5 + Mockito** – Testes Unitarios
+- Renda igual ou superior a **R$ 5.000**.
+
+**Taxa de juros:** 2%.
+
+### Empréstimo com garantia
+
+- Renda igual ou inferior a **R$ 3.000**; ou
+- Renda entre **R$ 3.000 e R$ 5.000**, desde que o cliente tenha menos de 30 anos e resida em São Paulo (SP).
+
+**Taxa de juros:** 3%.
+
+## Tecnologias
+
+- Java 21
+- Spring Boot 3.4.3
+- Spring Web
+- Spring Validation
+- Spring Boot Actuator
+- Springdoc OpenAPI
+- H2 Database
+- Lombok
+- JUnit 5
+- Mockito
+- Maven
+- Docker
+
 ## Requisitos
 
 - Java 21+
 - Maven
+- Docker (opcional)
 
-## Executando o Projeto
+## Executando o projeto
 
-1. Clone o repositório:
-
-```bash
-git https://github.com/bispobr/spring-app-emprestimo.git
-```
-
-## Como usar
-
-1. Inicie a aplicação
-2. A API está acessivel atraves do endereço http://localhost:8080
-3. A documentação da API está acessível através do Link http://localhost:8080/swagger-ui/index.html#/
-4. O endpoint de saúde e métricas do Actuator está acessível através do Link http://localhost:8080/actuator/health
-
-## Como Rodar em um Container (Opcional)
-
-1. Construa o projeto
+Clone o repositório:
 
 ```bash
-mvn clean package 
+git clone https://github.com/bispobr/spring-app-emprestimo.git
+cd spring-app-emprestimo
 ```
 
-2. Gere a Imagem Docker, com o Docker  instalado execute:
-
+Execute a aplicação com Maven:
 
 ```bash
-docker build -t emprestimo . 
+mvn spring-boot:run
 ```
 
-3. Execute o Container
+A API estará disponível em:
+
+```text
+http://localhost:8080
+```
+
+## Swagger / OpenAPI
+
+Com a aplicação em execução, a documentação interativa pode ser acessada em:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+## Actuator
+
+Endpoint de saúde da aplicação:
+
+```text
+http://localhost:8080/actuator/health
+```
+
+## API Endpoint
+
+### Analisar modalidades de empréstimo
+
+```http
+POST /customer-loans
+Content-Type: application/json
+```
+
+Exemplo de requisição:
+
+```json
+{
+  "age": 28,
+  "income": 4000.00,
+  "location": "SP",
+  "name": "João da Silva",
+  "cpf": "000.000.000-00"
+}
+```
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `age` | `Integer` | Idade do cliente. |
+| `income` | `Double` | Renda mensal do cliente. |
+| `location` | `String` | Localização/residência do cliente. |
+| `name` | `String` | Nome do cliente. |
+| `cpf` | `String` | CPF do cliente. |
+
+Os campos estão sujeitos às regras de validação definidas pela aplicação.
+
+## Fluxo da aplicação
+
+```text
+Cliente
+   │
+   ▼
+POST /customer-loans
+   │
+   ▼
+Validação dos dados
+   │
+   ▼
+Regras de elegibilidade
+   │
+   ├── Empréstimo pessoal
+   ├── Empréstimo consignado
+   └── Empréstimo com garantia
+          │
+          ▼
+     Resposta da API
+```
+
+## Testes
+
+Execute os testes automatizados com:
+
+```bash
+mvn test
+```
+
+O projeto utiliza a infraestrutura de testes do Spring Boot, incluindo JUnit e Mockito.
+
+## Docker
+
+Gere o pacote da aplicação:
+
+```bash
+mvn clean package
+```
+
+Gere a imagem Docker:
+
+```bash
+docker build -t emprestimo .
+```
+
+Execute o container:
 
 ```bash
 docker run -p 8080:8080 emprestimo
 ```
 
+## Status
 
-## API Endpoints
-
-A API contem o seguinte endpoint :
-
-```http request
-POST /customer-loans - Registra um novo cliente.
-Content-Type: application/json
-
-{
-  "age": 00,
-  "income": 0000.00,
-  "location": "xx",
-  "name": "xxxxxx",
-  "cpf": "000.000.000-00"
-}
-```
-| Parâmetro | Tipo      | Descrição                           |
-|:----------|:----------| :---------------------------------- |
-| `age`     | `Integer` | **Obrigatório**.  A idade do usuário 
-| `income`   | `Double`  | **Obrigatório**. O salario do usuário 
-| `location`    | `String`  | **Obrigatório**. A residência do usuário 
-| `name`   | `String`  | **Obrigatório**. O nome do usuário 
-| `cpf`    | `String`  | **Obrigatório**. O cpf do usuário 
+Projeto desenvolvido para praticar construção de APIs REST com Spring Boot, validação de dados, implementação de regras de negócio, tratamento de exceções, documentação OpenAPI, monitoramento, testes automatizados e execução em containers.
